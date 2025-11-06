@@ -6,10 +6,11 @@ import time
 class Player:
     hole_score = 0
     len_check = 9
-    def __init__(self, seed, side_polynomial, top_polynomial):
-        self.random = Random(seed)
-        self.side_polynomial = side_polynomial
-        self.top_polynomial = top_polynomial
+    side_polynomial = 1
+    top_polynomial = 1
+
+    def choose_action(self, board):
+        pass
 
     def print_board(self, board):
         print("--------")
@@ -55,6 +56,10 @@ class Player:
                             hole_score += abs(y - 24) ** self.top_polynomial
         return top_bound_score
 
+    def total_bound_score(self, board):
+        return (self.bound_by_left(board) +
+                self.bound_by_right(board) +
+                self.bound_by_top(board))
 
 
 class RandomPlayer(Player):
@@ -95,6 +100,54 @@ class RandomPlayer(Player):
             ])
 
 
-SelectedPlayer = Player
+SelectedPlayer = RandomPlayer
+
+from board import Direction, Rotation, Action
+from random import Random
+import time
 
 
+class Player:
+    def choose_action(self, board):
+        pass
+
+
+class RandomPlayer(Player):
+    def __init__(self, seed=None):
+        self.random = Random(seed)
+
+    def print_board(self, board):
+        print("--------")
+        for y in range(24):
+            s = ""
+            for x in range(10):
+                if (x,y) in board.cells:
+                    s += "#"
+                else:
+                    s += "."
+            print(s, y)
+                
+
+            
+
+    def choose_action(self, board):
+        self.print_board(board)
+        time.sleep(0.5)
+        if self.random.random() > 0.97:
+            # 3% chance we'll discard or drop a bomb
+            return self.random.choice([
+                Action.Discard,
+                Action.Bomb,
+            ])
+        else:
+            # 97% chance we'll make a normal move
+            return self.random.choice([
+                Direction.Left,
+                Direction.Right,
+                Direction.Down,
+                Rotation.Anticlockwise,
+                Rotation.Clockwise,
+            ])
+
+
+SelectedPlayer = RandomPlayer
