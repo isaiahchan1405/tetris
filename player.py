@@ -4,8 +4,12 @@ import time
 
 
 class Player:
-    def __init__(self, seed=None):
+    hole_score = 0
+    len_check = 9
+    def __init__(self, seed, side_polynomial, top_polynomial):
         self.random = Random(seed)
+        self.side_polynomial = side_polynomial
+        self.top_polynomial = top_polynomial
 
     def print_board(self, board):
         print("--------")
@@ -92,4 +96,5 @@ class RandomPlayer(Player):
 
 
 SelectedPlayer = Player
+
 
